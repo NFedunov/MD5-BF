@@ -111,6 +111,7 @@ WordGenerator::WordGenerator(const char* mask, size_t size)
 	genStartWord();
 	password_s newPass;
 	memcpy_s(newPass.password, curWord.size() + 1, curWord.c_str(), curWord.size() + 1);
+
 	result.push_back(newPass);
 	maxResultSize = size;
 	done = false;
@@ -138,19 +139,17 @@ void WordGenerator::generateWords()
 
 void WordGenerator::genNextWord(unsigned int i)
 {
-	if (curWord[i] == this->lastWord[i])
+	if (curWord[i] == lastWord[i])
 	{
-		curWord[i] = this->startWord[i];
+		curWord[i] = startWord[i];
 		genNextWord(i + 1);
 	}
 	else
 	{
 		curWord[i] += 1;
 		password_s newPass;
-		//char *temp = new char[this->curWord.size()];
 		memcpy_s(newPass.password, curWord.size() + 1, curWord.c_str(), curWord.size() + 1);
-		//newPass.password = temp;
-		//newPass.size = this->curWord.size();
+	
 		result.push_back(newPass);
 		cout << "Generated word[" << result.size() << "]: " << result[result.size() - 1].password << endl;
 	}
