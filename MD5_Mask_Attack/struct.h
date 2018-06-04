@@ -1,4 +1,5 @@
-struct password_s {
+struct password_s 
+{
 	char password[32];
 };
 
