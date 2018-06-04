@@ -20,7 +20,7 @@ char* WordGenerator::handleMaskElement(char c)
 	case 'A':
 		return this->mEl.A;
 	default:
-		cout << "Error: unknown mask element '" << c << "'. Type -h for help" << endl;
+		cout << "Error: unknown mask element '" << c << endl;
 		return nullptr;
 	}
 }
@@ -103,9 +103,7 @@ WordGenerator::WordGenerator(const char* mask, size_t size)
 	this->curWord = "";
 	this->genStartWord();
 	password_s newPass;
-	//char *temp = new char[this->curWord.size()];
 	memcpy_s(newPass.password, this->curWord.size() + 1, this->curWord.c_str(), this->curWord.size() + 1);;
-	//newPass.size = this->curWord.size();
 	this->result.push_back(newPass);
 	this->maxResultSize = size;
 	this->done = false;
