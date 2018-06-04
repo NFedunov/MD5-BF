@@ -1,7 +1,11 @@
+.vs/*
 Debug/*
 Release/*
+x64/*
 MD5_Mask_Attack/Debug/*
 MD5_Mask_Attack/Release/*
+MD5_Mask_Attack/x64/*
+*.txt
 *.opensdf
 *.sdf
 *.suo

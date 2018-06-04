@@ -1,24 +1,27 @@
 #include "WordGenerator.h"
+#include <iostream>
+
+using namespace std;
 
 bool WordGenerator::isOver()
 {
-	return this->done;
+	return done;
 }
 
-char* WordGenerator::handleMaskElement(char c)
+char* WordGenerator::handleMaskElement(const char c)
 {
 	switch (c)
 	{
 	case '*':
-		return this->mEl.star;
+		return mEl.star;
 	case 'd':
-		return this->mEl.d;
+		return mEl.d;
 	case 'a':
-		return this->mEl.a;
+		return mEl.a;
 	case '.':
-		return this->mEl.dot;
+		return mEl.dot;
 	case 'A':
-		return this->mEl.A;
+		return mEl.A;
 	default:
 		cout << "Error: unknown mask element '" << c << endl;
 		return nullptr;
@@ -68,50 +71,49 @@ size_t WordGenerator::resultSize()
 void WordGenerator::genStartWord()
 {
 	unsigned int i = 0;
-	while (i < this->mask.size())
+	
+	while (i < mask.size())
 	{
-		if (this->mask[i] == '\\')
+		if (mask[i] == '\\')
 		{
-			if (this->mask[i + 1] != '(')
+			if (mask[i + 1] != '(')
 			{
 				cerr << "Error: wrong mask. -h for help" << endl;
 				exit(-2);
 			}
 			unsigned int temp = this->handleConsts(i + 1);
 			i += 2;
-			this->startWord += this->mask.substr(i, temp - i - 1);
-			this->curWord += this->mask.substr(i, temp - i - 1);
-			this->lastWord += this->mask.substr(i, temp - i - 1);
+			startWord	+= mask.substr(i, temp - i - 1);
+			curWord		+= mask.substr(i, temp - i - 1);
+			lastWord	+= mask.substr(i, temp - i - 1);
 			i = temp + 1;
 			continue;
 		}
-		char *temp = &this->handleMaskElement(this->mask[i])[0];
+
+		char* temp = &handleMaskElement(mask[i])[0];
+
 		if (temp == nullptr)
 		{
 			exit(-1);
 		}
+
 		this->startWord += temp[0];
-		this->curWord += temp[0];
-		this->lastWord += temp[1];
+		this->curWord	+= temp[0];
+		this->lastWord	+= temp[1];
 		i++;
 	}
 }
 
 WordGenerator::WordGenerator(const char* mask, size_t size)
 {
+	//Never use the same names in constructor
 	this->mask = string(mask);
-	this->curWord = "";
-	this->genStartWord();
+	genStartWord();
 	password_s newPass;
-	memcpy_s(newPass.password, this->curWord.size() + 1, this->curWord.c_str(), this->curWord.size() + 1);;
-	this->result.push_back(newPass);
-	this->maxResultSize = size;
-	this->done = false;
-}
-
-
-WordGenerator::~WordGenerator()
-{
+	memcpy_s(newPass.password, curWord.size() + 1, curWord.c_str(), curWord.size() + 1);
+	result.push_back(newPass);
+	maxResultSize = size;
+	done = false;
 }
 
 vector<password_s> WordGenerator::getResult()
@@ -126,30 +128,30 @@ void WordGenerator::clearResult()
 
 void WordGenerator::generateWords()
 {
-	while (this->curWord != this->lastWord && this->result.size() < this->maxResultSize)
+	while (curWord != lastWord && result.size() < maxResultSize)
 	{
-		this->genNextWord(0);
+		genNextWord(0);
 	}
-	if (this->curWord == this->lastWord)
-		this->done = true;
+	if (curWord == lastWord)
+		done = true;
 }
 
 void WordGenerator::genNextWord(unsigned int i)
 {
-	if (this->curWord[i] == this->lastWord[i])
+	if (curWord[i] == this->lastWord[i])
 	{
-		this->curWord[i] = this->startWord[i];
-		this->genNextWord(i + 1);
+		curWord[i] = this->startWord[i];
+		genNextWord(i + 1);
 	}
 	else
 	{
-		this->curWord[i] += 1;
+		curWord[i] += 1;
 		password_s newPass;
 		//char *temp = new char[this->curWord.size()];
-		memcpy_s(newPass.password, this->curWord.size() + 1, this->curWord.c_str(), this->curWord.size() + 1);
+		memcpy_s(newPass.password, curWord.size() + 1, curWord.c_str(), curWord.size() + 1);
 		//newPass.password = temp;
 		//newPass.size = this->curWord.size();
-		this->result.push_back(newPass);
-		cout << "Generated word[" << this->result.size() << "]: " << this->result[this->result.size() - 1].password << endl;
+		result.push_back(newPass);
+		cout << "Generated word[" << result.size() << "]: " << result[result.size() - 1].password << endl;
 	}
 }
