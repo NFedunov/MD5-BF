@@ -134,9 +134,13 @@ void md5(const char* message, unsigned int messageLength, unsigned int* hash)
 __kernel void calcHashes(__global struct password_s* passwords, uint passwordLength, __global struct hash_s* hashes)
 {
 	const uint id = get_global_id(0);
-	const char* message = passwords[id].password;
+	struct password_s buffer;
+	for(uint i = 0; i <= passwordLength; i++)
+	{
+		buffer.password[i] = passwords[id].password[i];
+	}
 	uint hash[4];
-	md5(message, passwordLength, hash);
+	md5(buffer.password, passwordLength, hash);
 	for (uint i = 0; i < 4; i++)
 	{
 		hashes[id].h[i] = hash[i];
