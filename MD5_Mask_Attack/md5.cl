@@ -135,7 +135,7 @@ __kernel void calcHashes(__global struct password_s* passwords, uint passwordLen
 {
 	const uint id = get_global_id(0);
 	struct password_s buffer;
-	for(uint i = 0; i <= passwordLength; i++)
+	for(uint i = 0; i < passwordLength; i++)
 	{
 		buffer.password[i] = passwords[id].password[i];
 	}
