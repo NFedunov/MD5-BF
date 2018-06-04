@@ -147,7 +147,7 @@ void WordGenerator::genNextWord(unsigned int i)
 	{
 		this->curWord[i] += 1;
 		password_s newPass;
-		char *temp = new char[this->curWord.size()];
+		//char *temp = new char[this->curWord.size()];
 		memcpy_s(newPass.password, this->curWord.size() + 1, this->curWord.c_str(), this->curWord.size() + 1);
 		//newPass.password = temp;
 		//newPass.size = this->curWord.size();

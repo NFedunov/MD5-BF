@@ -1,5 +1,7 @@
 #include "struct.h"
 
+#pragma OPENCL EXTENSION cl_khr_byte_addressable_store : enable
+
 #define F(x, y, z)	((z) ^ ((x) & ((y) ^ (z))))
 #define G(x, y, z)	((y) ^ ((z) & ((x) ^ (y))))
 #define H(x, y, z)	((x) ^ (y) ^ (z))
@@ -129,18 +131,12 @@ void md5(const char* message, unsigned int messageLength, unsigned int* hash)
 	md5Round(hash, (const uint*)X);
 }
 
-__kernel void calcHashes(__global struct password_s* passwords, uint passwordLength, __global struct hash_s* hashes)
+__kernel void calcHashes(__global struct password_s* passwords, __global struct hash_s* hashes)
 {
 	const uint id = get_global_id(0);
-	struct password_s buffer;
-	for(uint i = 0; i < passwordLength; i++)
-	{
-		buffer.password[i] = passwords[id].password[i];
-	}
+	const char* message = passwords[id].password;
 	uint hash[4];
-	md5(buffer.password, passwordLength, hash);
-	for (uint i = 0; i < 4; i++)
-	{
-		hashes[id].h[i] = hash[i];
-	}
+	uint messageLength = passwords[id].size;
+	md5(message, messageLength, hash);
+	for (uint i = 0; i < 4; hashes[id].h[i] = hash[i], i++);
 }
