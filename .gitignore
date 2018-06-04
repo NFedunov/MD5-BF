@@ -1,0 +1,7 @@
+Debug/*
+Release/*
+MD5_Mask_Attack/Debug/*
+MD5_Mask_Attack/Release/*
+*.opensdf
+*.sdf
+*.suo
