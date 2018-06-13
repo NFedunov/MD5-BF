@@ -104,10 +104,9 @@ void WordGenerator::genStartWord()
 	}
 }
 
-WordGenerator::WordGenerator(const char* mask, size_t size)
+WordGenerator::WordGenerator(const char* inputMask, size_t size)
 {
-	//Never use the same names in constructor
-	this->mask = string(mask);
+	mask = string(inputMask);
 	genStartWord();
 	password_s newPass;
 	memcpy_s(newPass.password, curWord.size() + 1, curWord.c_str(), curWord.size() + 1);
